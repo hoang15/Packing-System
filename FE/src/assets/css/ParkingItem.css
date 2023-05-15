@@ -1,0 +1,12 @@
+table {
+  border: 1px solid black;
+}
+tr td {
+  border: 1px solid black;
+}
+.Selection {
+  margin-top: 20px;
+  margin-left: 20px;
+  font-size: 18px;
+  border-radius: 5px;
+}

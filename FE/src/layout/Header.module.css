@@ -1,0 +1,95 @@
+.Header {
+  background: rgb(231, 231, 231);
+  height: 70px;
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  width: 1200px;
+  margin-left: 150px;
+}
+.profile-details img {
+  height: 40px;
+  width: 40px;
+  border-radius: 6px;
+  object-fit: cover;
+}
+.profile-details {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  margin: 0 10px;
+  white-space: nowrap;
+  font-size: 25px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  background: #f5f6fa;
+  border: 2px solid #efeef1;
+  border-radius: 6px;
+  height: 50px;
+  min-width: 190px;
+  padding: 0 15px 0 2px;
+}
+.admin_name {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  margin: 0 10px;
+  white-space: nowrap;
+}
+
+.reg {
+  color: white;
+  background-color: rgba(104, 85, 224, 1);
+  cursor: pointer;
+  border: 0;
+  border-radius: 4px;
+  font-weight: 10;
+  width: 90px;
+  padding: 10px 0;
+  box-shadow: 0 0 20px rgba(104, 85, 224, 0.2);
+  transition: 0.4s;
+}
+.out {
+  color: white;
+  background-color: rgba(104, 85, 224, 1);
+  cursor: pointer;
+  border: 0;
+  border-radius: 4px;
+  font-weight: 100;
+  width: 90px;
+  padding: 5px 0;
+  height: 100%;
+  box-shadow: 0 0 20px rgba(104, 85, 224, 0.2);
+  transition: 0.4s;
+}
+
+.log {
+  color: rgb(104, 85, 224);
+  background-color: rgba(255, 255, 255, 1);
+  border: 1px solid rgba(104, 85, 224, 1);
+  cursor: pointer;
+  border: 0;
+  border-radius: 4px;
+  font-weight: 10;
+  width: 90px;
+  padding: 10px 0;
+  box-shadow: 0 0 20px rgba(104, 85, 224, 0.2);
+  transition: 0.4s;
+}
+.log:hover {
+  color: white;
+
+  box-shadow: 0 0 20px rgba(104, 85, 224, 0.6);
+  background-color: rgba(104, 85, 224, 1);
+}
+.reg:hover {
+  color: white;
+
+  box-shadow: 0 0 20px rgba(104, 85, 224, 0.6);
+  background-color: rgba(104, 85, 224, 1);
+}
