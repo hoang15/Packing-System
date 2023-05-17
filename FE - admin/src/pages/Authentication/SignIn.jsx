@@ -4,9 +4,15 @@ import UserService from "@/services/user.service.js";
 import { AUTH_TOKEN } from "@/utils/constants.js";
 import { Link, useNavigate } from "react-router-dom";
 import "./SignIn.css";
+import useUserInfo from "@/hooks/useUserInfo.js";
 
 function SignIn() {
   const navigate = useNavigate();
+  const userInfo = useUserInfo();
+  const signOut = async () => {
+    await UserService.signOut();
+    location.reload();
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -27,6 +33,16 @@ function SignIn() {
       });
       localStorage.setItem(AUTH_TOKEN, result.data.token);
       navigate("/");
+
+      // localStorage.setItem(AUTH_TOKEN, result.data.token);
+      // let checkAdmin = localStorage.getItem(AUTH_TOKEN);
+      // if (checkAdmin) {
+      //   if (userInfo?.is_admin) {
+      //     navigate("/");
+      //   } else {
+      //     localStorage.removeItem(AUTH_TOKEN);
+      //   }
+      // }
     },
   });
   return (

@@ -12,10 +12,18 @@ const ParkingItem = ({ indexCol, indexRow, nameArea, idArea }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [email, setEmail] = useState();
   const [userId, setUserId] = useState("");
+  const [active, setActive] = useState("");
   const showModal = () => {
     let checkAuth = localStorage.getItem(AUTH_TOKEN);
     if (checkAuth) {
-      setIsModalOpen(true);
+      if (active == true) {
+        setIsModalOpen(true);
+      } else {
+        Modal.error({
+          title: "You can't make a reservation ",
+          content: "Please active account",
+        });
+      }
     } else {
       Modal.error({
         title: "You can't make a reservation ",
@@ -32,6 +40,8 @@ const ParkingItem = ({ indexCol, indexRow, nameArea, idArea }) => {
       areaId: idArea,
       start_time: "",
       end_time: "",
+      row: indexRow,
+      col: indexCol,
     },
     validationSchema: yup.object({
       start_time: yup.string().required("Required!"),
@@ -43,10 +53,11 @@ const ParkingItem = ({ indexCol, indexRow, nameArea, idArea }) => {
           user_id: userId,
           packing_Area_id: values.areaId,
           row: values.row,
-          column: values.column,
+          column: values.col,
           start_time: values.start_time,
           end_time: values.end_time,
         };
+        console.log(params);
         await parkingReserve.create(params);
         window.location.reload();
       } catch (e) {
@@ -75,8 +86,10 @@ const ParkingItem = ({ indexCol, indexRow, nameArea, idArea }) => {
   }, []);
   useEffect(() => {
     UserService.getUserInfo().then((res) => {
+      console.log(res);
       setEmail(res.data.email);
       setUserId(res.data.id);
+      setActive(res.data.is_active);
     });
   }, []);
 
@@ -118,7 +131,11 @@ const ParkingItem = ({ indexCol, indexRow, nameArea, idArea }) => {
             <div>
               <label>Row</label>
             </div>
-            <label style={{ marginTop: "20px", color: "red" }}>
+            <label
+              value={formik.values.indexRow}
+              onChange={formik.handleChange}
+              style={{ marginTop: "20px", color: "red" }}
+            >
               {indexRow}
             </label>
           </div>
@@ -126,7 +143,11 @@ const ParkingItem = ({ indexCol, indexRow, nameArea, idArea }) => {
             <div>
               <label>Column</label>
             </div>
-            <label style={{ marginTop: "20px", color: "red" }}>
+            <label
+              value={formik.values.col}
+              onChange={formik.handleChange}
+              style={{ marginTop: "20px", color: "red" }}
+            >
               {indexCol}
             </label>
           </div>
