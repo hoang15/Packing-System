@@ -9,6 +9,7 @@ function App() {
     <div className="App">
       <BrowserRouter>
         <div className={"main-container"}>
+          <Header style={{ position: "fixed" }} />
           <Routes>
             {routes.map((item) =>
               item.element ? (

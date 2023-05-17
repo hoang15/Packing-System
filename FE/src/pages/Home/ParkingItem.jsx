@@ -7,16 +7,15 @@ import parkingReserve from "../../services/area.service";
 import UserService from "../../services/user.service";
 import packingReserve from "../../services/area.service";
 import { AUTH_TOKEN } from "../../utils/constants";
+import useUserInfo from "@/hooks/useUserInfo.js";
 
-const ParkingItem = ({ indexCol, indexRow, nameArea, idArea }) => {
+const ParkingItem = ({ indexCol, indexRow, nameArea, idArea, isParked }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [email, setEmail] = useState();
-  const [userId, setUserId] = useState("");
-  const [active, setActive] = useState("");
+  const userInfo = useUserInfo();
   const showModal = () => {
     let checkAuth = localStorage.getItem(AUTH_TOKEN);
     if (checkAuth) {
-      if (active == true) {
+      if (userInfo?.is_active == true) {
         setIsModalOpen(true);
       } else {
         Modal.error({
@@ -50,7 +49,7 @@ const ParkingItem = ({ indexCol, indexRow, nameArea, idArea }) => {
     onSubmit: async (values) => {
       try {
         const params = {
-          user_id: userId,
+          user_id: userInfo?.id,
           packing_Area_id: values.areaId,
           row: values.row,
           column: values.col,
@@ -70,40 +69,13 @@ const ParkingItem = ({ indexCol, indexRow, nameArea, idArea }) => {
     formik.handleSubmit();
   };
 
-  // const changeColor = () => {
-  //   if ((reserveColumn == indexCol) & (reserveRow == indexRow)) & {
-
-  //   }
-  // };
-
-  useEffect(() => {
-    parkingReserve.search({ page: 1, perPage: 10 }).then((result) => {
-      result.data.items.forEach((item) => {
-        item.reserveColumn = item.column;
-        item.reserveRow = item.row;
-      });
-    });
-  }, []);
-  useEffect(() => {
-    UserService.getUserInfo().then((res) => {
-      console.log(res);
-      setEmail(res.data.email);
-      setUserId(res.data.id);
-      setActive(res.data.is_active);
-    });
-  }, []);
-
-  useEffect(() => {
-    packingReserve.list({ page: 1, perPage: 30 }).then((result) => {
-      result.data.items.forEach((item) => {
-        item.col = item.column;
-        item.row = item.row;
-      });
-    });
-  }, []);
   return (
-    <div className="park-item">
-      <Button onClick={showModal} style={{ height: "60px", width: "100px" }}>
+    <div>
+      <Button
+        className={`park-item ${isParked ? "activeParked" : ""}`}
+        onClick={showModal}
+        style={{ height: "60px", width: "100px" }}
+      >
         <i style={{ fontSize: "30px" }} className="bx bxs-car"></i>
         <div id="changeColor">
           S{indexCol}-{indexRow}

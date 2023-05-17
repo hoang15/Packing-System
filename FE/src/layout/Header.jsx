@@ -1,4 +1,4 @@
-import headerStyle from "./Header.module.css";
+import headerStyle from "../assets/css/Header.module.css";
 import { NavLink, useNavigate } from "react-router-dom";
 import useUserInfo from "@/hooks/useUserInfo.js";
 import UserService from "@/services/user.service.js";

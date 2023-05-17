@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import "./Admin.css";
-import { Modal, Table, Button, Input, Tag } from "antd";
+import { Modal, Table, Button, Input, Tag, Checkbox } from "antd";
 import userService from "../../services/user";
 import useUserInfo from "@/hooks/useUserInfo.js";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
@@ -61,7 +61,6 @@ function User() {
       onFilter: (value, record) => record.is_active === value,
       render: (value) => {
         let color = value == true ? "green" : value == false ? "red" : "";
-
         return (
           <Tag color={color} key={value}>
             {String(value).toUpperCase()}
@@ -115,16 +114,20 @@ function User() {
       email: "",
       password: "",
       passwordConfirm: "",
+      emailVisibility: "true",
     },
     validationSchema: yup.object({
-      email: yup.string().required("Required!").email("Invalid email format"),
+      email: yup
+        .string()
+        .required("Please enter email!")
+        .email("Invalid email format"),
       password: yup
         .string()
-        .required("Required!")
+        .required("Please enter password!")
         .min(8, "Minimum 8 characters"),
       passwordConfirm: yup
         .string()
-        .required("Required!")
+        .required("Please enter password!")
         .oneOf([yup.ref("password")], "Password's not match"),
     }),
     onSubmit: async (values) => {
@@ -138,9 +141,15 @@ function User() {
   });
 
   useEffect(() => {
-    userService.search({ page: 1, perPage: 20 }).then((result) => {
-      setuser(result.data.items);
-    });
+    async function fetchData() {
+      try {
+        const result = await userService.search({ page: 1, perPage: 20 });
+        setuser(result.data.items);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    fetchData();
   }, []);
   return (
     <div>
@@ -287,24 +296,36 @@ function User() {
                   };
                   resetEditing();
                 });
+              location.reload();
             }}
           >
-            <Input
-              value={editingUser?.email}
-              onChange={(e) => {
-                setEditingUser((pre) => {
-                  return { ...pre, email: e.target.value };
-                });
-              }}
-            />
-            <Input
-              value={editingUser?.is_active}
-              onChange={(e) => {
-                setEditingUser((pre) => {
-                  return { ...pre, is_active: e.target.value };
-                });
-              }}
-            />
+            <label>Email</label>
+            <div>
+              <Input
+                value={editingUser?.email}
+                onChange={(e) => {
+                  setEditingUser((pre) => {
+                    return { ...pre, email: e.target.value };
+                  });
+                }}
+              />
+            </div>
+            <div>
+              <Checkbox
+                style={{ marginTop: "15px" }}
+                checked={editingUser?.is_active}
+                onChange={(e) => {
+                  setEditingUser((pre) => {
+                    return {
+                      ...pre,
+                      is_active: e.target.checked,
+                    };
+                  });
+                }}
+              >
+                Active
+              </Checkbox>
+            </div>
           </Modal>
         </div>
       </section>

@@ -3,7 +3,7 @@ import * as yup from "yup";
 import UserService from "@/services/user.service.js";
 import { AUTH_TOKEN } from "@/utils/constants.js";
 import { Link, useNavigate } from "react-router-dom";
-import "./SignIn.css";
+import "../../assets/css/SignIn.css";
 
 function SignIn() {
   const navigate = useNavigate();

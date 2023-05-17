@@ -2,6 +2,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import UserService from "@/services/user.service.js";
 import { useNavigate } from "react-router-dom";
+import "../../assets/css/SignIn.css";
 
 function SignUp() {
   const navigate = useNavigate();

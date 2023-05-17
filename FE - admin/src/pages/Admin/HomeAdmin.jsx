@@ -3,7 +3,7 @@ import Parking_Area from "../../services/parking_area.service";
 import useUserInfo from "@/hooks/useUserInfo.js";
 import UserService from "@/services/user.service.js";
 import { useEffect, useState } from "react";
-import { Table, Button, Modal, Input } from "antd";
+import { Table, Button, Modal, Input, InputNumber } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -103,7 +103,7 @@ function HomeAdmin() {
       countdown: 0,
     },
     validationSchema: yup.object({
-      name: yup.string().required("Please enter name of tunnel!"),
+      name: yup.string().required("Please enter name of area!"),
       row_count: yup.number().required("Required!"),
       column_count: yup.number().required("Required!"),
       countdown: yup.number().required("Required!"),
@@ -119,10 +119,15 @@ function HomeAdmin() {
   });
 
   useEffect(() => {
-    Parking_Area.search({ page: 1, perPage: 9999 }).then((result) => {
-      setAreaList(result.data.items);
-      console.log(result);
-    });
+    async function fetchData() {
+      try {
+        const result = await Parking_Area.search({ page: 1, perPage: 500 });
+        setAreaList(result.data.items);
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    fetchData();
   }, []);
   return (
     <div>
@@ -276,6 +281,7 @@ function HomeAdmin() {
                 });
               }}
             >
+              <label> Area Name</label>
               <Input
                 value={editingArea?.name}
                 onChange={(e) => {
@@ -284,30 +290,51 @@ function HomeAdmin() {
                   });
                 }}
               />
-              <Input
-                value={editingArea?.row_count}
-                onChange={(e) => {
-                  setEditingArea((pre) => {
-                    return { ...pre, row_count: e.target.value };
-                  });
-                }}
-              />
-              <Input
-                value={editingArea?.column_count}
-                onChange={(e) => {
-                  setEditingArea((pre) => {
-                    return { ...pre, column_count: e.target.value };
-                  });
-                }}
-              />
-              <Input
-                value={editingArea?.countdown}
-                onChange={(e) => {
-                  setEditingArea((pre) => {
-                    return { ...pre, countdown: e.target.value };
-                  });
-                }}
-              />
+              <div>
+                <label> Row</label>
+                <div>
+                  <input
+                    className="inputNumber"
+                    type="number"
+                    value={editingArea?.row_count}
+                    onChange={(e) => {
+                      setEditingArea((pre) => {
+                        return { ...pre, row_count: e.target.value };
+                      });
+                    }}
+                  />
+                </div>
+              </div>
+              <div>
+                <label>Colunm</label>
+                <div>
+                  <input
+                    className="inputNumber"
+                    type="number"
+                    value={editingArea?.column_count}
+                    onChange={(e) => {
+                      setEditingArea((pre) => {
+                        return { ...pre, column_count: e.target.value };
+                      });
+                    }}
+                  />
+                </div>
+              </div>
+              <div>
+                <label>Countdown</label>
+                <div>
+                  <input
+                    className="inputNumber"
+                    type="number"
+                    value={editingArea?.countdown}
+                    onChange={(e) => {
+                      setEditingArea((pre) => {
+                        return { ...pre, countdown: e.target.value };
+                      });
+                    }}
+                  />
+                </div>
+              </div>
             </Modal>
           </div>
         </section>

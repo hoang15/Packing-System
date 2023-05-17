@@ -3,7 +3,7 @@ import "./Admin.css";
 import packingReserve from "../../services/area.service";
 import useUserInfo from "@/hooks/useUserInfo.js";
 import UserService from "@/services/user.service.js";
-import { Modal, Table, Input, DatePicker } from "antd";
+import { Modal, Table, Input, DatePicker, InputNumber } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Link } from "react-router-dom";
 import avt from "../../assets/img_avatar.png";
@@ -95,14 +95,22 @@ function Reserve() {
   };
 
   useEffect(() => {
-    packingReserve.list({ page: 1, perPage: 30 }).then((result) => {
-      setPackingData(result.data.items);
-      console.log(result.data.items);
-      result.data.items.forEach((item) => {
-        item.userEmail = item.expand.user_id.email;
-        item.areaName = item.expand.packing_Area_id.name;
-      });
-    });
+    async function fetchData() {
+      try {
+        const result = await packingReserve.list({ page: 1, perPage: 500 });
+        setPackingData(result.data.items);
+
+        result.data.items.forEach((item) => {
+          item.areaid = item.expand.packing_Area_id.id;
+          console.log(item.areaid);
+          item.userEmail = item.expand.user_id.email;
+          item.areaName = item.expand.packing_Area_id.name;
+        });
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    fetchData();
   }, []);
   return (
     <div>
@@ -177,12 +185,11 @@ function Reserve() {
             onOk={() => {
               packingReserve
                 .update(editingReserve.id, {
-                  userEmail: editingReserve.userEmail,
-                  areaName: editingReserve.areaName,
+                  user_id: userInfo?.id,
                   row: editingReserve.row,
                   column: editingReserve.column,
-                  startTime: editingReserve.startTime,
-                  endTime: editingReserve.endTime,
+                  start_time: editingReserve.start_time,
+                  end_time: editingReserve.end_time,
                 })
                 .then(() => {
                   (pre) => {
@@ -199,15 +206,16 @@ function Reserve() {
                 });
             }}
           >
-            <Input
+            {/* <Input
               value={editingReserve?.userEmail}
               onChange={(e) => {
                 setEditingReserve((pre) => {
                   return { ...pre, userEmail: e.target.value };
                 });
               }}
-            />
-            <Input
+            /> */}
+
+            {/* <Input
               style={{ marginTop: "10px" }}
               value={editingReserve?.areaName}
               onChange={(e) => {
@@ -215,26 +223,44 @@ function Reserve() {
                   return { ...pre, areaName: e.target.value };
                 });
               }}
-            />
-            <Input
-              style={{ marginTop: "10px" }}
-              value={editingReserve?.row}
-              onChange={(e) => {
-                setEditingReserve((pre) => {
-                  return { ...pre, row: e.target.value };
-                });
-              }}
-            />
-            <Input
-              style={{ marginTop: "10px" }}
-              value={editingReserve?.column}
-              onChange={(e) => {
-                setEditingReserve((pre) => {
-                  return { ...pre, column: e.target.value };
-                });
-              }}
-            />
-            <DatePicker
+            /> */}
+            <div>
+              <div>
+                <label> Area Name</label>
+              </div>
+              {editingReserve?.areaName}
+            </div>
+            <div style={{ marginTop: "15px" }}>
+              <label>Row</label>
+              <div>
+                <input
+                  className="inputNumber"
+                  type="number"
+                  value={editingReserve?.row}
+                  onChange={(e) => {
+                    setEditingReserve((pre) => {
+                      return { ...pre, row: e.target.value };
+                    });
+                  }}
+                />
+              </div>
+            </div>
+            <div style={{ marginTop: "15px" }}>
+              <div>
+                <label>Column</label>
+              </div>
+              <input
+                className="inputNumber"
+                type="number"
+                value={editingReserve?.column}
+                onChange={(e) => {
+                  setEditingReserve((pre) => {
+                    return { ...pre, column: e.target.value };
+                  });
+                }}
+              />
+            </div>
+            {/* <DatePicker
               showTime
               style={{ marginTop: "10px" }}
               defaultValue={editingReserve?.startTime}
@@ -253,7 +279,38 @@ function Reserve() {
                   return { ...pre, endTime: e.target.value };
                 });
               }}
-            />
+            /> */}
+            <div style={{ marginTop: "15px" }}>
+              <div>
+                <label>End time</label>
+              </div>
+              <input
+                type="date"
+                name="start_time"
+                value={editingReserve?.endTime}
+                onChange={(e) => {
+                  setEditingReserve((pre) => {
+                    return { ...pre, start_time: e.target.value };
+                  });
+                }}
+              />
+            </div>
+
+            <div style={{ marginTop: "15px" }}>
+              <div>
+                <label>End time</label>
+              </div>
+              <input
+                type="date"
+                name="end_time"
+                value={editingReserve?.endTime}
+                onChange={(e) => {
+                  setEditingReserve((pre) => {
+                    return { ...pre, end_time: e.target.value };
+                  });
+                }}
+              />
+            </div>
           </Modal>
         </div>
       </section>
